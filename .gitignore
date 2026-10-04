@@ -10,3 +10,6 @@ coverage/
 !.env.example
 *.log
 .DS_Store
+
+# Personal notes
+BUILD-NOTES.md

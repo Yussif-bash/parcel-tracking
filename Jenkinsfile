@@ -13,10 +13,10 @@ pipeline {
 
   tools { nodejs 'node-22' }
 
-  environment {
+   environment {
     CI = 'true'
-    // Region comes from the Jenkins server's AWS configuration or this variable once decided.
-    // AWS_REGION = 'eu-west-1'
+    AWS_REGION = 'eu-west-1'
+    AWS_DEFAULT_REGION = 'eu-west-1'
   }
 
   stages {
