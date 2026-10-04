@@ -61,7 +61,7 @@ pipeline {
     }
 
     stage('Smoke test (dev)') {
-      when { branch 'main' }
+      when { branch 'master' }
       steps {
         sh '''
           API_URL=$(aws cloudformation describe-stacks --stack-name ParcelApi-dev \
@@ -72,7 +72,7 @@ pipeline {
     }
 
     stage('Approve production') {
-      when { branch 'main' }
+      when { branch 'master' }
       steps {
         timeout(time: 1, unit: 'HOURS') {
           input message: 'Deploy to production?', ok: 'Deploy'
@@ -81,7 +81,7 @@ pipeline {
     }
 
     stage('Deploy to prod') {
-      when { branch 'main' }
+      when { branch 'master' }
       steps {
         dir('infra') { sh 'pnpm exec cdk deploy --all -c stage=prod --require-approval never' }
       }
