@@ -44,7 +44,7 @@ pipeline {
     }
 
     stage('CDK synth and diff') {
-      when { anyOf { branch 'main'; changeRequest() } }
+      when { anyOf { branch 'master'; changeRequest() } }
       steps {
         dir('infra') {
           sh 'pnpm exec cdk synth -c stage=dev --quiet'
