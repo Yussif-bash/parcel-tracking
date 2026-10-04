@@ -54,7 +54,7 @@ pipeline {
     }
 
     stage('Deploy to dev') {
-      when { branch 'main' }
+      when { branch 'master' }
       steps {
         dir('infra') { sh 'pnpm exec cdk deploy --all -c stage=dev --require-approval never' }
       }
