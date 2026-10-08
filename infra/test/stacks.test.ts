@@ -21,9 +21,12 @@ describe("DataStack", () => {
     });
   });
 
-  it("has the gsi1 index", () => {
+  it("has the gsi1 and gsi2 indexes", () => {
     template.hasResourceProperties("AWS::DynamoDB::Table", {
-      GlobalSecondaryIndexes: Match.arrayWith([Match.objectLike({ IndexName: "gsi1" })]),
+      GlobalSecondaryIndexes: Match.arrayWith([
+        Match.objectLike({ IndexName: "gsi1" }),
+        Match.objectLike({ IndexName: "gsi2" }),
+      ]),
     });
   });
 });

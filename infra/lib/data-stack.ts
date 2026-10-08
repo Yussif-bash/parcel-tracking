@@ -27,11 +27,19 @@ export class DataStack extends Stack {
       removalPolicy: config.retainData ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
     });
 
-    // GSI1 serves lookups by tracking code, tracking token hash, active trips, and driver.
+    // gsi1 and gsi2 are shared by several kinds of item, each with its own key prefix (see packages/db).
+    // gsi1: trips by status, parcels by tracking code, lists of routes and drivers.
     this.table.addGlobalSecondaryIndex({
       indexName: "gsi1",
       partitionKey: { name: "gsi1pk", type: AttributeType.STRING },
       sortKey: { name: "gsi1sk", type: AttributeType.STRING },
+    });
+
+    // gsi2: trips by driver, parcels by tracking-token hash.
+    this.table.addGlobalSecondaryIndex({
+      indexName: "gsi2",
+      partitionKey: { name: "gsi2pk", type: AttributeType.STRING },
+      sortKey: { name: "gsi2sk", type: AttributeType.STRING },
     });
   }
 }

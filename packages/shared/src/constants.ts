@@ -29,6 +29,14 @@ export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
 export const CONFIRMATION_SOURCES = ["CUSTOMER", "DRIVER", "CASHIER"] as const;
 export type ConfirmationSource = (typeof CONFIRMATION_SOURCES)[number];
 
+/** How a trip start or arrival was triggered. AUTO is automatic detection from location. */
+export const TRIP_EVENT_SOURCES = ["DRIVER", "CASHIER", "AUTO"] as const;
+export type TripEventSource = (typeof TRIP_EVENT_SOURCES)[number];
+
+/** Delivery state of a notification, updated from the SMS provider's delivery receipts. */
+export const DELIVERY_STATUSES = ["QUEUED", "SENT", "DELIVERED", "FAILED"] as const;
+export type DeliveryStatus = (typeof DELIVERY_STATUSES)[number];
+
 /** Alert lead time, chosen per parcel at registration. */
 export const NOTIFY_AHEAD = { DEFAULT_MINUTES: 30, MIN_MINUTES: 5, MAX_MINUTES: 180 } as const;
 
