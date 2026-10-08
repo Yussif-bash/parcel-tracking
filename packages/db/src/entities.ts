@@ -8,7 +8,7 @@ import {
   TRACKING_MODES,
   TRIP_STATUSES,
   DELIVERY_STATUSES,
-  TRIP_EVENT_SOURCES
+  TRIP_EVENT_SOURCES,
 } from "@parcel/shared";
 
 /**
