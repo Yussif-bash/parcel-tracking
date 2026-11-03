@@ -1,0 +1,20 @@
+{
+  "name": "parcel-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node --watch src/server.ts"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
