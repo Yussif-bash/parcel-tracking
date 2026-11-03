@@ -1,6 +1,0 @@
-node_modules
-dist
-out
-.next
-cdk.out
-pnpm-lock.yaml

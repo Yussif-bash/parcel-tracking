@@ -1,9 +1,0 @@
-packages:
-  - "apps/*"
-  - "services/*"
-  - "packages/*"
-  - "infra"
-
-# pnpm blocks dependency install scripts by default. esbuild needs its install script to fetch its binary.
-allowBuilds:
-  esbuild: true
