@@ -10,7 +10,8 @@
     "dev": "node --watch src/server.ts",
     "test": "vitest run",
     "db:check": "node --env-file=.env src/db-check.ts",
-    "migrate": "node --env-file=.env src/migrate.ts"
+    "migrate": "node --env-file=.env src/migrate.ts",
+    "migrate:test": "node --env-file=.env.test src/migrate.ts"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
