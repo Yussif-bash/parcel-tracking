@@ -4,7 +4,7 @@ import {afterAll, beforeAll, describe, expect, it} from "vitest"
 import { app } from "./app.ts";
 
 let server: Server;
-let baseUrl: String;
+let baseUrl: string;
 
 beforeAll(async( ) => {
     server = app.listen(0);

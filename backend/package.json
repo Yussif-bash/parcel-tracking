@@ -7,7 +7,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "node --watch src/server.ts",
+    "dev": "node --env-file=.env --watch src/server.ts",
     "test": "vitest run",
     "db:check": "node --env-file=.env src/db-check.ts",
     "migrate": "node --env-file=.env src/migrate.ts",

@@ -81,3 +81,12 @@ export async function createParcel(input: CreateParcelInput): Promise<Parcel>{
 
     throw new Error("Could not create a unique tracking code");
 }
+
+export async function listParcels(limit = 100): Promise<Parcel[]> {
+    const result = await pool.query(`
+        SELECT * FROM parcels ORDER BY id DESC LIMIT $1`, 
+        [limit]
+    );
+    
+    return result.rows.map(toParcel)
+}
