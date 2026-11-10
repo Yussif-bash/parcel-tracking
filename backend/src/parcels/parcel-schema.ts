@@ -1,11 +1,11 @@
 import z from "zod";
 
-const nameSchemma = z.string().trim().min(1,"Name is required").max(120, "Name is too long");
+const nameSchemma = z.string("Name is required").trim().min(1,"Name is required").max(120, "Name is too long");
 
-const descriptionSchema = z.string().trim().min(1, "Description is required").max(300, "Description is too long");
+const descriptionSchema = z.string("Description is required").trim().min(1, "Description is required").max(300, "Description is too long");
 
 const phoneSchema = z
-    .string()
+    .string("Phone number is required")
     .trim()
     .transform((value) => value.replace(/[\s-]/g, ""))
     .transform((value) => (/^0\d{9}$/.test(value) ? `+233${value.slice(1)}` : value))

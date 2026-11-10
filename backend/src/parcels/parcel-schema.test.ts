@@ -39,4 +39,13 @@ describe("createParcelSchema", () => {
     const tooLong = { ...valid, description: "x".repeat(301) };
     expect(createParcelSchema.safeParse(tooLong).success).toBe(false);
   });
+  
+  it("gives a friendly message when fields are missing", () => {
+    const result = createParcelSchema.safeParse({});
+    expect(result.success).toBe(false);
+    const messages = result.error?.issues.map((issue) => issue.message);
+    expect(messages).toContain("Name is required");
+    expect(messages).toContain("Phone number is required");
+    expect(messages).toContain("Description is required");
+  });
 });
