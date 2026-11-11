@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { createParcel, listParcels } from "./parcel-repository.ts"
+import { createParcel, deleteParcels, listParcels } from "./parcel-repository.ts"
 import { createParcelSchema } from "./parcel-schema.ts"
 
 export const parcelRoutes = Router();
@@ -24,4 +24,8 @@ parcelRoutes.post("/", async(req, res) => {
 
 parcelRoutes.get("/", async (_req, res) => {
     res.status(200).json(await listParcels())
+});
+
+parcelRoutes.delete("/", async (_req, res) => {
+    res.status(200).json(await deleteParcels())
 })
