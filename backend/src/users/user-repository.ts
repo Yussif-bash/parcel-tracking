@@ -14,7 +14,7 @@ export interface UserWithPassword extends User{
     passwordHash: string
 }
 
-interface UserRow{
+export interface UserRow{
     id: string,
     name: string,
     phone: string,
@@ -24,7 +24,7 @@ interface UserRow{
     created_at: Date
 };
 
-function toUser(row: UserRow): User {
+export function toUser(row: UserRow): User {
     return{
         id: row.id,
         name: row.name,

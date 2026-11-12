@@ -5,7 +5,7 @@ import { phoneInUseError, createUser, findUserByphone } from "./user-repository.
 const input = {name: "Yussif Bashiru", phone: "0245342452", role: "CASHIER"} as const
 
 beforeEach(async () => {
-    await pool.query("TRUNCATE users");
+    await pool.query("TRUNCATE users CASCADE");
 });
 
 afterAll(async() => {
