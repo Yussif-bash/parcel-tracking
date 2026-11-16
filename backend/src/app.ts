@@ -2,6 +2,7 @@ import express, { type ErrorRequestHandler }from "express"
 import cookieParser from "cookie-parser";
 import { parcelRoutes } from "./parcels/parcel-routes.ts"
 import { authRoutes } from "./auth/auth-routes.ts";
+import { requireLogin, requireRole } from "./auth/auth-middleware.ts";
 
 export const app = express();
 
@@ -12,7 +13,7 @@ app.get("/health", (_req, res) => {
     res.status(200).json({status: "Ok"})
 });
 
-app.use("/parcels", parcelRoutes);
+app.use("/parcels", requireLogin, requireRole("CASHIER"), parcelRoutes);
 app.use("/auth", authRoutes)
 
 app.use((_req, res) => {

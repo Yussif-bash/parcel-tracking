@@ -1,26 +1,24 @@
-import type { Server } from "node:http";
-import type { AddressInfo } from "node:net";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { app } from "../app.ts";
 import { pool } from "../db.ts";
+import { sessionCookieForTest, startTestServer } from "../test-helper.ts";
 
-let server: Server;
+let closeServer: () => void;
 let baseUrl: string;
+let cookie: string;
 
 beforeAll(async () => {
-  server = app.listen(0);
-  await new Promise<void>((resolve) => {
-    server.once("listening", () => resolve());
-  });
-  baseUrl = `http://localhost:${(server.address() as AddressInfo).port}`;
+  const server = await startTestServer();
+  baseUrl = server.baseUrl;
+  closeServer = server.close
 });
 
 beforeEach(async () => {
   await pool.query("TRUNCATE parcels");
+  cookie = await sessionCookieForTest("CASHIER")
 });
 
 afterAll(async () => {
-  server.close();
+  closeServer()
   await pool.end();
 });
 
@@ -32,12 +30,16 @@ const validParcel = {
   description: "Box of books",
 };
 
-function post(body: unknown) {
+function post(body: unknown, cookieHeader: string | undefined = cookie) {
   return fetch(`${baseUrl}/parcels`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(cookieHeader ? {Cookie: cookieHeader}: {}) },
     body: JSON.stringify(body),
   });
+}
+
+function get(cookieHeader: string | undefined = cookie){
+  return(fetch(`${baseUrl}/parcels`, cookieHeader ? {headers: {Cookie: cookieHeader}}: {}))
 }
 
 describe("POST /parcels", () => {
@@ -54,7 +56,6 @@ describe("POST /parcels", () => {
   it("returns 400 with a message for each invalid field", async () => {
     const response = await post({ ...validParcel, senderPhone: "123", description: "" });
     expect(response.status).toBe(400);
-
     const body = await response.json();
     const fields = body.details.map((detail: { field: string }) => detail.field);
     expect(fields).toContain("senderPhone");
@@ -64,21 +65,21 @@ describe("POST /parcels", () => {
   it("returns 400 when the body is not valid JSON", async () => {
     const response = await fetch(`${baseUrl}/parcels`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Cookie: cookie},
       body: "{not json",
     });
     expect(response.status).toBe(400);
   });
 
   it("returns 400 when the body is missing", async () => {
-    const response = await fetch(`${baseUrl}/parcels`, { method: "POST" });
+    const response = await fetch(`${baseUrl}/parcels`, { method: "POST", headers: {Cookie: cookie}});
     expect(response.status).toBe(400);
   });
 });
 
 describe("GET /parcels", () => {
   it("returns an empty list when there are no parcels", async () => {
-    const response = await fetch(`${baseUrl}/parcels`);
+    const response = await get();
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual([]);
   });
@@ -88,11 +89,29 @@ describe("GET /parcels", () => {
       await post({ ...validParcel, receiverName: name });
     }
 
-    const parcels = await (await fetch(`${baseUrl}/parcels`)).json();
-    expect(parcels.map((parcel: { receiverName: string }) => parcel.receiverName)).toEqual([
+    const parcels = await (await (get())).json();
+    expect(parcels.map((parcel: { receiverName: string }) => parcel.receiverName),).toEqual([
       "Third",
       "Second",
       "First",
     ]);
+  });
+});
+
+
+describe("access control", () => {
+  it("returns 401 when nobody is logged in", async () => {
+    expect((await get("undefined")).status).toBe(401);
+    expect((await post(validParcel, "undefined")).status).toBe(401);
+  });
+
+  it("returns 401 for a session token that does not exist", async () => {
+    expect((await get("session=not-a-real-token")).status).toBe(401);
+  });
+
+  it("returns 403 for a role that may not use parcels", async () => {
+    const driverCookie = await sessionCookieForTest("DRIVER");
+    expect((await get(driverCookie)).status).toBe(403);
+    expect((await post(validParcel, driverCookie)).status).toBe(403);
   });
 });

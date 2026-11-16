@@ -1,5 +1,8 @@
 import type { AddressInfo } from "node:net";
 import { app } from "./app.ts";
+import { createSession } from "./auth/session-repository.ts";
+import { createUser } from "./users/user-repository.ts";
+import type { UserRole } from "./users/users-schema.ts";
 
 /** Starts the app on a free port for a test file. Call `close()` when the tests finish. */
 export async function startTestServer() {
@@ -17,4 +20,19 @@ export async function startTestServer() {
             server.close()
         }
     }
+}
+
+let phoneCounter = 0;
+
+export async function sessionCookieForTest(role: UserRole){
+    phoneCounter += 1;
+    const user = await createUser({
+        name: `Test ${role}`,
+        phone: `+23320000${String(phoneCounter).padStart(4, "0")}`,
+        role
+    }, "unused-hash");
+
+    const {token} = await createSession(user.id);
+
+    return `session=${token}`
 }

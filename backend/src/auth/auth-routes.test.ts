@@ -110,3 +110,22 @@ describe("POST /auth/logout", () => {
     expect(response.status).toBe(204);
   });
 });
+
+describe("GET /auth/me", () => {
+  it("returns the logged-in user without the password hash", async () => {
+    const loggedIn = await login({ phone: "0241234567", password: "correct-password" });
+    const response = await fetch(`${baseUrl}/auth/me`, {
+      headers: { Cookie: `session=${tokenFrom(loggedIn)}` },
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.name).toBe("Ama Mensah");
+    expect(body).not.toHaveProperty("passwordHash");
+  });
+
+  it("returns 401 without a cookie", async () => {
+    const response = await fetch(`${baseUrl}/auth/me`);
+    expect(response.status).toBe(401);
+  });
+});

@@ -5,6 +5,7 @@ import { phoneSchema } from "../validation/phone.ts";
 import { clearCookieOptions, sessionCookieOptions, SESSION_COOKIE} from "./cookie.ts";
 import { hashPassword, verifyPassword } from "./password.ts";
 import { createSession, deleteSession } from "./session-repository.ts";
+import { requireLogin } from "./auth-middleware.ts";
 
 export const authRoutes = Router();
 
@@ -57,4 +58,8 @@ authRoutes.post("/logout", async(req, res) => {
 
     clearCookieOptions(res);
     res.status(204).end();
+})
+
+authRoutes.get("/me", requireLogin, (req, res) => {
+    res.json(req.user)
 })
