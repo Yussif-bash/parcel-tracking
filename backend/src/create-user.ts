@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { parseArgs } from "node:util";
 import { hashPassword } from "./auth/password.ts";
 import { pool } from "./db.ts";
-import { createUser, phoneInUseError } from "./users/user-repository.ts";
+import { createUser, PhoneInUseError } from "./users/user-repository.ts";
 import { createUserSchema } from "./users/users-schema.ts";
 
 const { values } = parseArgs({
@@ -34,7 +34,7 @@ try {
     
 } catch (error) {
 
-    if(error instanceof phoneInUseError){
+    if(error instanceof PhoneInUseError){
         console.error(error.message);
         process.exitCode = 1
     }else{

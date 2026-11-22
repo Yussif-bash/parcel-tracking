@@ -129,3 +129,126 @@ describe("GET /auth/me", () => {
     expect(response.status).toBe(401);
   });
 });
+
+describe("login lockout", () => {
+  it("locks the account after five wrong passwords, even for the right password", async () => {
+    for (let i = 0; i < 5; i++) {
+      expect((await login({ phone: "0241234567", password: "wrong" })).status).toBe(401);
+    }
+
+    const locked = await login({ phone: "0241234567", password: "correct-password" });
+    expect(locked.status).toBe(429);
+    expect(sessionCookieFrom(locked)).toBeUndefined();
+  });
+
+  it("a successful login resets the count", async () => {
+    for (let i = 0; i < 4; i++) await login({ phone: "0241234567", password: "wrong" });
+    expect((await login({ phone: "0241234567", password: "correct-password" })).status).toBe(200);
+
+    for (let i = 0; i < 4; i++) await login({ phone: "0241234567", password: "wrong" });
+    expect((await login({ phone: "0241234567", password: "correct-password" })).status).toBe(200);
+  });
+
+  it("does not lock a phone number that has no account", async () => {
+    for (let i = 0; i < 6; i++) {
+      expect((await login({ phone: "0200000000", password: "wrong" })).status).toBe(401);
+    }
+  });
+});
+
+describe("POST /auth/change-password", () => {
+  
+  async function loggedInCookie(password = "correct-password") {
+    const response = await login({ phone: "0241234567", password });
+    return `session=${tokenFrom(response)}`;
+  }
+
+  function changePassword(cookie: string | undefined, body: unknown) {
+    return fetch(`${baseUrl}/auth/change-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(cookie ? { Cookie: cookie } : {}),
+      },
+      body: JSON.stringify(body),
+    });
+  }
+
+  it("changes the password: the new one works and the old one does not", async () => {
+    const cookie = await loggedInCookie();
+    const response = await changePassword(cookie, {
+      currentPassword: "correct-password",
+      newPassword: "a-much-longer-password",
+    });
+    expect(response.status).toBe(204);
+
+    expect((await login({ phone: "0241234567", password: "correct-password" })).status).toBe(401);
+    expect((await login({ phone: "0241234567", password: "a-much-longer-password" })).status).toBe(
+      200,
+    );
+  });
+
+  it("ends the old session and starts a fresh one", async () => {
+    const oldCookie = await loggedInCookie();
+    const response = await changePassword(oldCookie, {
+      currentPassword: "correct-password",
+      newPassword: "a-much-longer-password",
+    });
+
+    const newToken = response.headers
+      .getSetCookie()
+      .find((cookie) => cookie.startsWith("session="))!
+      .split(";")[0]!
+      .slice("session=".length);
+
+    expect(await findUserBySessionToken(oldCookie.slice("session=".length))).toBeNull();
+    expect(await findUserBySessionToken(newToken)).not.toBeNull();
+  });
+
+  it("rejects a wrong current password and changes nothing", async () => {
+    const cookie = await loggedInCookie();
+    const response = await changePassword(cookie, {
+      currentPassword: "not-my-password",
+      newPassword: "a-much-longer-password",
+    });
+    expect(response.status).toBe(401);
+    expect((await login({ phone: "0241234567", password: "correct-password" })).status).toBe(200);
+  });
+
+  it("rejects a new password that is too short", async () => {
+    const cookie = await loggedInCookie();
+    const response = await changePassword(cookie, {
+      currentPassword: "correct-password",
+      newPassword: "short",
+    });
+    expect(response.status).toBe(400);
+  });
+
+  it("rejects a new password that is the same as the current one", async () => {
+    const cookie = await loggedInCookie();
+    const response = await changePassword(cookie, {
+      currentPassword: "correct-password",
+      newPassword: "correct-password",
+    });
+    expect(response.status).toBe(400);
+  });
+
+  it("requires a login", async () => {
+    const response = await changePassword(undefined, {
+      currentPassword: "correct-password",
+      newPassword: "a-much-longer-password",
+    });
+    expect(response.status).toBe(401);
+  });
+
+  it("counts wrong current passwords toward the lockout", async () => {
+    const cookie = await loggedInCookie();
+    for (let i = 0; i < 5; i++) {
+      await changePassword(cookie, {
+        currentPassword: "wrong-guess",
+        newPassword: "a-much-longer-password",
+      });
+    }
+    expect((await login({ phone: "0241234567", password: "correct-password" })).status).toBe(429);
+  });
+});
