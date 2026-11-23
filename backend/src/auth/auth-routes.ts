@@ -123,6 +123,6 @@ authRoutes.post("/change-password", requireLogin, async (req, res) => {
   res.status(204).end();
 })
 
-authRoutes.get("/me", requireLogin, (req, res) => {
+authRoutes.get("/me", requireLogin, (req, res) => {    
     res.json(req.user)
 })

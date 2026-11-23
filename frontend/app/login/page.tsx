@@ -1,4 +1,6 @@
 import { ChartColumn, MessageSquare, Package, Receipt } from "lucide-react";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/session";
 import { LoginForm } from "./login-form";
 
 const benefits = [
@@ -7,14 +9,17 @@ const benefits = [
   { icon: ChartColumn, text: "Owners see every trip" },
 ];
 
-export default function LoginPage() {
+export default async function LoginPage() {
+
+    if(await getCurrentUser()) redirect("/")
+
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
       <div className="grid w-full max-w-4xl overflow-hidden rounded-xl border border-fog-200 bg-white md:min-h-[28rem] md:grid-cols-[5fr_7fr]">
         <section className="flex flex-col justify-between gap-8 bg-ocean-800 p-6 md:p-8">
           <div className="flex items-center gap-2 font-medium text-white">
             <Package aria-hidden className="size-6 text-coral-600" />
-            Parcel tracking
+            SendTrack
           </div>
 
           <div className="hidden md:block">
