@@ -5,17 +5,20 @@
   --color-fog-100: #eceff1;
   --color-fog-200: #dde2e6;
   --color-fog-300: #c3cbd2;
+  --color-fog-400: #e8ecef;
   --color-fog-600: #5d6973;
   --color-fog-700: #46515a;
   --color-fog-900: #1f272d;
 
   --color-ocean-50: #eaf6f6;
   --color-ocean-100: #cfeaea;
+  --color-ocean-500: #0f5560;
   --color-ocean-600: #0f7c7f;
   --color-ocean-700: #0b6164;
   --color-ocean-800: #0a4c4f;
 
   --color-coral-50: #fff1ef;
   --color-coral-500: #ff6f61;
+  --color-coral-600: #ff6a4d;
   --color-coral-700: #b8372c;
 }
