@@ -1,5 +1,6 @@
 "use client";
 
+import { CircleAlert, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent} from "react";
 
@@ -10,11 +11,15 @@ function errorMessage(status: number, body: unknown): string {
     return "Something went wrong. Please try again";
 };
 
+const inputClass =
+  "h-10 w-full rounded-lg border border-ocean-100 bg-white px-3 text-base text-ocean-800 focus:border-ocean-500 focus:outline-none";
+
 
 export function LoginForm(){
     const router = useRouter();
     const [ error, setError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     async function handleSubmit(event:FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -43,63 +48,72 @@ export function LoginForm(){
             setSubmitting(false);
         }
     };
-    return(
+    return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-fog-700">
-                Phone number
-                </label>
-                <input
-                id="phone"
-                name="phone"
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                required
-                className="mt-1 block w-full rounded-md border border-fog-300 bg-white px-3 py-2 text-fog-900 focus:border-ocean-600 focus:outline-none focus:ring-2 focus:ring-ocean-600/30"
-                />
+        {error && (
+            <div
+            role="alert"
+            className="flex items-start gap-2 rounded-lg border border-coral-500 bg-coral-50 px-3 py-2.5 text-sm text-coral-700"
+            >
+            <CircleAlert aria-hidden className="mt-0.5 size-[18px] shrink-0" />
+            <span>{error}</span>
             </div>
+        )}
 
-            <div>
-                <label htmlFor="password" className="block text-sm font-medium text-fog-700">
-                Password
-                </label>
-                <input
+        <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-ocean-800">
+            Phone number
+            </label>
+            <input
+            id="phone"
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            required
+            aria-describedby="phone-help"
+            className={`mt-1 ${inputClass}`}
+            placeholder="Enter your phone number"
+            />
+        </div>
+
+        <div>
+            <label htmlFor="password" className="block text-sm font-medium text-ocean-800">
+            Password
+            </label>
+            <div className="relative mt-1">
+            <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
-                className="mt-1 block w-full rounded-md border border-fog-300 bg-white px-3 py-2 text-fog-900 focus:border-ocean-600 focus:outline-none focus:ring-2 focus:ring-ocean-600/30"
-                />
-            </div>
-
-            {error && (
-                <p
-                role="alert"
-                className="rounded-md border border-coral-500 bg-coral-50 px-3 py-2 text-sm text-coral-700"
-                >
-                {error}
-                </p>
-            )}
-
+                className={`${inputClass} pr-11`}
+                placeholder="Enter your password"
+            />
             <button
-                type="submit"
-                disabled={submitting}
-                className="w-full rounded-md bg-coral-600 px-4 py-2 font-medium text-white hover:bg-coral-500 disabled:opacity-60"
+                type="button"
+                onClick={() => setShowPassword((shown) => !shown)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
+                className="absolute right-1 top-1 flex size-8 items-center justify-center rounded-md text-fog-600 hover:bg-fog-100 hover:text-fog-900"
             >
-                {submitting ? "Signing in…" : "Sign in"}
+                {showPassword ? (
+                <EyeOff aria-hidden className="size-[18px] text-ocean-600" />
+                ) : (
+                <Eye aria-hidden className="size-[18px] text-ocean-600" />
+                )}
             </button>
+            </div>
+        </div>
 
-            <hr />
-            <button 
-                className="w-full rounded-md px-4 border border-coral-50 py-2 font-medium text-fog-700 hover:bg-coral-600 hover:text-white disabled:opacity-60">
-                Sign in With Google
-            </button>
-            <button 
-               className="w-full rounded-md border border-coral-50 px-4 py-2 font-medium text-fog-700 hover:bg-coral-500 hover:text-white disabled:opacity-60"
-               >Sign in with Facebook
-            </button>
+        <button
+            type="submit"
+            disabled={submitting}
+            className="h-11 w-full rounded-lg bg-coral-600 font-medium text-white hover:bg-coral-700 disabled:opacity-60"
+        >
+            {submitting ? "Signing in…" : "Sign in"}
+        </button>
         </form>
     );
 }

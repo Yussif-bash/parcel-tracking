@@ -6,7 +6,7 @@ export default function Page(){
       <div className="mt-6 flex flex-wrap gap-3">
         <span className="rounded-md bg-ocean-500 px-4 py-2 text-white">Ocean teal</span>
         <span className="rounded-md bg-coral-600 px-4 py-2 text-white">Coral</span>
-        <span className="rounded-md bg-fog-400 px-4 py-2">Fog grey</span>
+        <span className="rounded-md bg-fog-00 px-4 py-2">Fog grey</span>
       </div>
     </main>
   );
