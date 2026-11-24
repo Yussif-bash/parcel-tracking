@@ -45,7 +45,6 @@ export function SignOutButton() {
                 disabled={pending}
                 className="flex h-9 items-center bg-coral-600 gap-1.5 rounded-lg border border-coral-500 px-3 text-sm text-white hover:bg-coral-700 disabled:opacity-60"
             >
-                Sign out
                 <LogOut aria-hidden className="size-4" />
             </button>
         </div>
