@@ -25,8 +25,8 @@ export function LoginForm(){
         event.preventDefault();
         setError(null);
         setSubmitting(true);
-
-        const form = new FormData(event.currentTarget);
+        const formElement = event.currentTarget;
+        const form = new FormData(formElement);
 
         try {
             const response = await fetch("/api/auth/login", {
@@ -39,7 +39,7 @@ export function LoginForm(){
                 router.push("/");
                 router.refresh();
                 return;
-            }
+            };
 
             setError(errorMessage(response.status, await response.json().catch(() => null)));
         } catch (error) {

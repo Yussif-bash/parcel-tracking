@@ -92,8 +92,5 @@ export async function listParcels(limit = 100): Promise<Parcel[]> {
 }
 export async function deleteParcels() {
     const result = await pool.query(`DELETE FROM parcels`  );
-
     console.log(result);
-    
-    
 }

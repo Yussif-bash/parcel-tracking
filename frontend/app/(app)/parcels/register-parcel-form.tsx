@@ -132,6 +132,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
                 id={name}
                 name={name}
                 type={type}
+                placeholder={`Enter ${label}`}
                 inputMode={type === "tel" ? "tel" : undefined}
                 aria-invalid={fieldErrors[name] ? true : undefined}
                 aria-describedby={fieldErrors[name] ? `${name}-error` : undefined}
@@ -158,6 +159,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
             aria-invalid={fieldErrors.description ? true : undefined}
             aria-describedby={fieldErrors.description ? "description-error" : undefined}
             className={`${inputClass} py-2`}
+            placeholder="Enter a description"
           />
           {fieldErrors.description && (
             <p id="description-error" className="mt-1 text-xs text-coral-700">
@@ -169,7 +171,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         <button
           type="submit"
           disabled={submitting}
-          className="h-11 rounded-lg bg-coral-600 px-5 font-medium text-white hover:bg-coral-700 disabled:opacity-60"
+          className="h-11 w-full rounded-lg bg-coral-600 px-5 font-medium text-white hover:bg-coral-700 disabled:opacity-60"
         >
           {submitting ? "Registering…" : "Register parcel"}
         </button>

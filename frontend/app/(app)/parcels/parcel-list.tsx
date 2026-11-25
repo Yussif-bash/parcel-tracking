@@ -36,12 +36,12 @@ export function ParcelList({ parcels }: { parcels: Parcel[]}){
             className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3"
           >
             <div className="min-w-0">
-              <p className="font-mono text-sm font-medium">{parcel.trackingCode}</p>
-              <p className="truncate text-sm text-fog-600">
-                To {parcel.receiverName} · {parcel.receiverPhone}
+              <p className="font-mono text-sm font-medium text-ocean-500">{parcel.trackingCode}</p>
+              <p className="truncate text-sm text-ocean-500">
+                To {parcel.receiverName} <span className="text-coral-600">·</span> {parcel.receiverPhone}
               </p>
             </div>
-            <div className="flex items-center gap-3 text-xs text-fog-600">
+            <div className="flex items-center gap-3 text-xs text-ocean-500">
               <span>{timeFormat.format(new Date(parcel.createdAt))}</span>
               <span className={`rounded-full px-2.5 py-1 font-medium ${status.className}`}>
                 {status.label}
