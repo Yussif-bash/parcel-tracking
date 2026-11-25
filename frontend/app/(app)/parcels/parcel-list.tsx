@@ -9,7 +9,7 @@ const statusStyles: Record<ParcelStatus, {label: string, className: string}> = {
     CANCELLED: {label: "Cancelled", className: "bg-coral-50 text-coral-700"}
 };
 
-const timeFormat = new Intl.DateTimeFormat("en-GB", {
+export const timeFormat = new Intl.DateTimeFormat("en-GB", {
     dateStyle: "medium",
     timeStyle: "short",
     timeZone: "Africa/Accra",
@@ -19,16 +19,15 @@ const timeFormat = new Intl.DateTimeFormat("en-GB", {
 export function ParcelList({ parcels }: { parcels: Parcel[]}){
     if(parcels.length === 0){
         return (
-        <div className="rounded-xl border border-dashed border-fog-300 bg-white p-8 text-center">
+        <div className="rounded-xl border border-dashed border-fog-300 bg-fog-50 p-8 text-center">
             <p className="font-medium">No parcels yet</p>
             <p className="mt-1 text-sm text-fog-600">Registered parcels will appear here.</p>
         </div>
         );
     }
 
-
   return (
-    <ul className="divide-y divide-fog-200 overflow-hidden rounded-xl border border-fog-200 bg-white">
+    <ul className="divide-y divide-fog-200 overflow-hidden rounded-xl border border-fog-200 bg-fog-50">
       {parcels.map((parcel) => {
         const status = statusStyles[parcel.status];
         return (

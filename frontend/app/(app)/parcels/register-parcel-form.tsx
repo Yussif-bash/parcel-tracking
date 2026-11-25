@@ -28,7 +28,7 @@ const fields = [
 ] as const
 
 const inputClass =
-  "mt-1 w-full rounded-lg border border-fog-300 bg-white px-3 text-base text-fog-900 focus:border-ocean-600 focus:outline-none focus:ring-2 focus:ring-ocean-600/30 aria-[invalid=true]:border-coral-500";  
+  "mt-1 w-full rounded-lg border border-fog-300 bg-fog-50 px-3 text-base text-fog-900 focus:border-fog-100 focus:outline-none aria-[invalid=true]:border-coral-500";  
 
 
 export function RegisterParcelForm() {
@@ -110,7 +110,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
       <form
         onSubmit={handleSubmit}
         noValidate
-        className="space-y-4 rounded-xl border border-fog-200 bg-white p-5"
+        className="space-y-4 rounded-xl border border-fog-200 bg-fog-50 p-5"
       >
         {formError && (
           <div

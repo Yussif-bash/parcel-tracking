@@ -25,11 +25,11 @@ export default async function AppLayout({children}:{children: React.ReactNode}) 
                     SendTrack
                 </div>
             </Link>
-            <div className="flex items-center gap-3">
-                {/* <div className="text-right leading-tight bg-coral-50 py-1 px-6 rounded-md">
-                <p className="text-sm font-medium">{user.name}</p>
-                <p className="text-xs text-fog-600">{roleLabels[user.role]}</p>
-                </div> */}
+            <div className="flex items-center gap-4">
+                <div className="text-right leading-tight">
+                <p className="text-sm font-medium text-fog-400">{user.name}</p>
+                <p className="text-xs text-coral-600">{roleLabels[user.role]}</p>
+                </div>
                 <SignOutButton />
             </div>
             </div>

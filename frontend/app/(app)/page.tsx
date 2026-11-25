@@ -1,5 +1,4 @@
 import { requireUser } from "@/lib/session";
-import { ParcelButton } from "./parcels";
 import Link from "next/link";
 
 export default async function HomePage() {
