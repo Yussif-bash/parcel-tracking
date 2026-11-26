@@ -2,7 +2,7 @@
 
 import {CircleCheck, CircleAlert} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent} from "react";
+import React, { useState, type FormEvent} from "react";
 
 type FieldErrors = Record<string, string>;
 type Registered = {trackingCode: string, receiverName: string}
@@ -34,9 +34,15 @@ const inputClass =
 export function RegisterParcelForm() {
     const router = useRouter()
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-    const [formError, setFormError] = useState<string | null>(null)
+    const [formError, setFormError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
-    const [registered, setRegistered] = useState<Registered | null>(null)
+    const [registered, setRegistered] = useState<Registered | null>(null);
+    const [isValid, setIsValid] = useState(false);
+
+
+    function handleFormChange(event: React.FormEvent<HTMLFormElement>){
+      setIsValid(event.currentTarget.checkValidity())
+    }
 
     
 async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -109,6 +115,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 
       <form
         onSubmit={handleSubmit}
+        onChange={handleFormChange}
         noValidate
         className="space-y-4 rounded-xl border border-fog-200 bg-fog-50 p-5"
       >
@@ -132,6 +139,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
                 id={name}
                 name={name}
                 type={type}
+                required
                 placeholder={`Enter ${label}`}
                 inputMode={type === "tel" ? "tel" : undefined}
                 aria-invalid={fieldErrors[name] ? true : undefined}
@@ -155,6 +163,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
             id="description"
             name="description"
             rows={3}
+            required
             maxLength={300}
             aria-invalid={fieldErrors.description ? true : undefined}
             aria-describedby={fieldErrors.description ? "description-error" : undefined}
@@ -170,7 +179,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 
         <button
           type="submit"
-          disabled={submitting}
+          disabled={!isValid || submitting}
           className="h-11 w-full rounded-lg bg-coral-600 px-5 font-medium text-white hover:bg-coral-700 disabled:opacity-60"
         >
           {submitting ? "Registering…" : "Register parcel"}

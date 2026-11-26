@@ -19,14 +19,14 @@ export default async function ParcelsPage() {
 
   return (
     <>
-      <p className="mt-1 text-ocean-600">
-        Register a parcel and see the latest ones.
-      </p>
-
-      <section className="mt-6">
+      <section className="mt-4">
         <h2 className="mb-3 text-lg font-medium text-ocean-800">
           Register a parcel
         </h2>
+
+        <p className="mb-2 text-ocean-600">
+          Register a parcel and see the latest ones.
+        </p>
         <RegisterParcelForm />
       </section>
 

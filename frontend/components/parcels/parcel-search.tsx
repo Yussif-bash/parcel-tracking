@@ -23,7 +23,7 @@ export function ParcelSearch({ parcels }: { parcels: Parcel[]}){
     return(
         <div className="relative flex-1">
             <InputGroup className="h-10 
-                rounded-lg border border-ocean-800 bg-white px-3 
+                rounded-lg border border-fog-100 bg-white px-3 
                 text-base text-ocean-800 focus:none focus:outline-ocean-800">
                 <InputGroupInput
                  placeholder="Find by trecking code or phone"

@@ -35,6 +35,18 @@ async function TodayParcelCount({ parcelsPromise }: { parcelsPromise: Promise<Pa
   );
 }
 
+function greet(): string{
+  const hours = new Date().getHours();
+
+  if(hours > 0 && hours === 12){
+    return "Morning"
+  }else if(hours > 12 && hours === 17){
+    return "Afternoon"
+  }else{
+    return "Evening"
+  }
+
+}
 async function RecentParcels({ parcelsPromise }: { parcelsPromise: Promise<Parcel[]> }) {
   const parcels = await parcelsPromise;
   return <ParcelList parcels={parcels} />;
@@ -53,7 +65,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <h1 className="text-2xl font-medium text-ocean-800">Hello, {firstName}</h1>
+      <h1 className="text-2xl font-medium text-ocean-800">Good {greet()}, {firstName}</h1>
         {user.role === "DRIVER" ? (
             <p className="mt-1 text-ocean-600">Your trips will appear here.</p>
           ) : (
