@@ -6,6 +6,7 @@ export type ParcelStatus = "REGISTERED" | "IN_TRANSIT" | "ARRIVED" | "COLLECTED"
 
 export interface Parcel {
   id: string;
+  tripId: string | null;
   trackingCode: string;
   senderName: string;
   senderPhone: string;
@@ -16,8 +17,9 @@ export interface Parcel {
   createdAt: Date;
 }
 
-interface ParcelRow {
+export interface ParcelRow {
   id: string;
+  trip_id: string | null;
   tracking_code: string;
   sender_name: string;
   sender_phone: string;
@@ -28,9 +30,10 @@ interface ParcelRow {
   created_at: Date;
 }
 
-function toParcel(row: ParcelRow): Parcel {
+export function toParcel(row: ParcelRow): Parcel {
     return{
         id: row.id,
+        tripId: row.trip_id,
         trackingCode: row.tracking_code,
         senderName: row.sender_name,
         senderPhone: row.sender_phone,

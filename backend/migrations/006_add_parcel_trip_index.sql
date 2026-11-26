@@ -1,0 +1,1 @@
+CREATE INDEX idx_parcels_trip_id ON parcels(trip_id);

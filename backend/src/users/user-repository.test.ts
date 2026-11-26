@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import { pool } from "../db.ts";
-import { PhoneInUseError, createUser, findUserByPhone, recordFailedLogin, recordSuccessfulLogin } from "./user-repository.ts";
+import { PhoneInUseError, createUser, findUserByPhone, listDrivers, recordFailedLogin, recordSuccessfulLogin } from "./user-repository.ts";
 
 const input = {name: "Yussif Bashiru", phone: "0245342452", role: "CASHIER"} as const
 
@@ -64,3 +64,19 @@ describe("login lockout", () => {
     expect((await findUserByPhone(input.phone))?.lockSecondsLeft).toBe(0);
   });
 });
+
+describe("listDrivers", () => {
+    it("lists only active drivers, sorted by name", async() => {
+        await createUser({name: "Yaw Driver", phone: "+233200000011", role:"DRIVER"}, "h");
+        await createUser({name: "Abena Driver", phone: "+233200000012", role:"DRIVER"}, "h");
+        await createUser({name: "Ama Cashier", phone: "+233200000013", role:"CASHIER"}, "h");
+
+        const off = await createUser({name: "Off Driver", phone:  "+233200000014", role:"DRIVER"}, "h");
+        await pool.query("UPDATE users SET active = false WHERE id = $1", [off.id]);
+
+        expect((await listDrivers()).map((driver) => driver.name)).toEqual([
+            "Abena Driver",
+            "Yaw Driver"
+        ])
+    })
+})

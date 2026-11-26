@@ -10,6 +10,12 @@ export interface User {
     createdAt: Date
 }
 
+export interface Driver {
+    id: string;
+    name: string;
+    phone: string;
+}
+
 export interface UserWithPassword extends User{
     passwordHash: string,
     lockSecondsLeft: number
@@ -111,4 +117,16 @@ export async function recordSuccessfulLogin(userId:string) {
 
 export async function updatePassword(userId:string, passwordHash: string): Promise<void> {
     await pool.query(`UPDATE users SET password_hash = $2 WHERE id = $1`, [userId, passwordHash])
+}
+
+/** Active drivers, for the list a cashier picks from when creating a trip. */
+export async function listDrivers(): Promise<Driver[]> {
+    const result = await pool.query<Driver>(
+        `SELECT id, name, phone 
+        FROM users 
+        WHERE role = 'DRIVER' 
+        AND active
+        ORDER BY name`
+    );
+    return result.rows;
 }
