@@ -8,7 +8,7 @@ export interface Trip {
     id: string;
     driverId: string;
     driverName: string;
-    vahicleNumaber: string;
+    vehicleNumber: string;
     destination: string;
     status: TripStatus;
     departedAt: Date | null;
@@ -39,7 +39,7 @@ function toTrip(row: TripRow): Trip {
         id: row.id,
         driverId: row.driver_id,
         driverName: row.driver_name,
-        vahicleNumaber: row.vehicle_number,
+        vehicleNumber: row.vehicle_number,
         destination: row.destination,
         status: row.status,
         departedAt: row.departed_at,
@@ -167,7 +167,7 @@ export async function assignParcels(tripId: string, parcelIds: string[]): Promis
 
         await client.query("COMMIT")
     } catch (error) {
-        client.query("ROLLBACK");
+        await client.query("ROLLBACK");
         throw error
     }finally{
         client.release();

@@ -61,7 +61,7 @@ import {
         const trip = await createTrip(tripInput());
         expect(trip.status).toBe("PLANNED");
         expect(trip.driverName).toBe("Kwame Driver");
-        expect(trip.vahicleNumaber).toBe("GR-1234-22");
+        expect(trip.vehicleNumber).toBe("GR-1234-22");
         expect(trip.parcelCount).toBe(0);
         expect(trip.departedAt).toBeNull();
     });

@@ -24,7 +24,7 @@ export async function startTestServer() {
 
 let phoneCounter = 0;
 
-export async function sessionCookieForTest(role: UserRole){
+export async function loginAs(role: UserRole): Promise<{userId: string, cookie: string}>{
     phoneCounter += 1;
     const user = await createUser({
         name: `Test ${role}`,
@@ -34,5 +34,9 @@ export async function sessionCookieForTest(role: UserRole){
 
     const {token} = await createSession(user.id);
 
-    return `session=${token}`
+    return {userId: user.id, cookie:`session=${token}`}
+};
+
+export async function sessionCookieForTest(role: UserRole): Promise<string> {
+    return (await loginAs(role)).cookie;
 }
