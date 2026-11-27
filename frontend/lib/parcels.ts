@@ -1,5 +1,4 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { backendGet } from "./backend";
 
 export type ParcelStatus = "REGISTERED" | "IN_TRANSIT" | "ARRIVED" | "COLLECTED" | "CANCELLED";
 
@@ -12,17 +11,8 @@ export type Parcel = {
     receiverPhone: string;
     description: string;
     status: ParcelStatus;
+    tripId: string | null
     createdAt: string;
 }
 
-export async function listParcels():Promise<Parcel[]> {
-    const response = await fetch(`${process.env.BACKEND_URL}/parcels`, {
-        headers: {cookie: (await cookies()).toString()},
-        cache: "no-store",
-    });
-
-
-    if(response.status === 401) redirect("/login");
-    if(!response.ok) throw new Error(`Could not load parcels (status ${response.status})`);
-    return response.json()
-}
+export const listParcels = () => backendGet<Parcel[]>("/parcels")

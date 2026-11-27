@@ -3,21 +3,9 @@
 import {CircleCheck, CircleAlert} from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState, type FormEvent} from "react";
+import { firstMessagePerField, inputClass, type FieldErrors } from "@/lib/forms";
 
-type FieldErrors = Record<string, string>;
-type Registered = {trackingCode: string, receiverName: string}
-
-function firstMessagePerField(details: unknown): FieldErrors {
-  const errors: FieldErrors = {};
-
-  if(!Array.isArray(details)) return errors;
-  for(const detail of details as {field?: string; message?: string}[]){
-    if(detail.field && detail.message && !(detail.field in errors)){
-        errors[detail.field] = detail.message;
-    }
-  }
-  return errors;
-};
+type Registered = {trackingCode: string, receiverName: string};
 
 
 const fields = [
@@ -26,10 +14,6 @@ const fields = [
     {name: "receiverName", label: "Receiver Name", type: "text"},
     {name: "receiverPhone", label: "Receiver Phone", type: "tel"},
 ] as const
-
-const inputClass =
-  "mt-1 w-full rounded-lg border border-fog-300 bg-fog-50 px-3 text-base text-fog-900 focus:border-fog-100 focus:outline-none aria-[invalid=true]:border-coral-500";  
-
 
 export function RegisterParcelForm() {
     const router = useRouter()
@@ -117,7 +101,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         onSubmit={handleSubmit}
         onChange={handleFormChange}
         noValidate
-        className="space-y-4 rounded-xl border border-fog-200 bg-fog-50 p-5"
+        className="space-y-4 rounded-xl border border-fog-200 bg-fog-100 p-5"
       >
         {formError && (
           <div
